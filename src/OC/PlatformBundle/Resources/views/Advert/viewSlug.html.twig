@@ -1,0 +1,40 @@
+{% extends "OCPlatformBundle::layout.html.twig" %}
+
+{% block title %}
+    Lecture d'une annonce - {{ parent() }}
+{% endblock %}
+
+{% block ocplatform_body %}
+        <div>
+            {# On affiche tous les messages flash dont le nom est « info » #}
+            {% for message in app.session.flashbag.get('info') %}
+                <p>Message flash : {{ message }}</p>
+            {% endfor %}
+        </div>
+        <p>
+          Affichage de l'annonce d'id : {{ id }}<br />
+          URL : {{ url }}<br />
+          URL complete : {{ url2 }}<br />
+          URL Twig : {{ path('oc_platform_view', { 'id': id }) }}<br>
+          URL Twig complete : {{ url('oc_platform_view', { 'id': id }) }}<br>
+          Tag : {{ tag }}<br>
+          isPost : {{ isPost }}<br>
+          Session userId : {{ app.session.get('user_id') }}
+        </p>
+        <form id="test" method="post">
+            <div>
+                <input type="text" name="birthdate" id="birthdate" placeholder="__/__/____" pattern="\d{1,2}/\d{1,2}/\d{4}" required>
+            </div>
+            <div>
+                <input list="browsers">
+                <datalist id="browsers">
+                    <option value="Internet Explorer">
+                    <option value="Firefox">
+                    <option value="Chrome">
+                    <option value="Opera">
+                    <option value="Safari">
+                </datalist>
+            </div>
+            <input type="submit" value="OK">
+        </form>
+{% endblock %}

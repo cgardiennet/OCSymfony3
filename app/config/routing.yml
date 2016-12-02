@@ -1,0 +1,7 @@
+to_basics:
+    resource: "@TOBasicsBundle/Resources/config/routing.yml"
+    prefix:   /
+
+oc_platform:
+    resource: "@OCPlatformBundle/Resources/config/routing.yml"
+    prefix:   /platform
