@@ -2,6 +2,7 @@
 
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use OC\CoreBundle\OCCoreBundle;
 use OC\PlatformBundle\OCPlatformBundle;
 use TO\BasicsBundle\TOBasicsBundle;
 
@@ -18,6 +19,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             // Personal bundles
+            new OCCoreBundle(),
             new OCPlatformBundle(),
             new TOBasicsBundle(),
         ];
