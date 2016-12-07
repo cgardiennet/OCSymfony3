@@ -1,9 +1,13 @@
-        <ul class="nav nav-pills nav-stacked">
+        <ul>
             {% for advert in listAdverts %}
             <li>
                 <a href="{{ path('oc_platform_view', {'id': advert.id}) }}">
-                {{ advert.title }}
+                    {{ advert.title }}
                 </a>
+                par {{ advert.author }},
+                le {{ advert.date|date('d/m/Y') }}
             </li>
+            {% else %}
+            <li>Pas (encore !) d'annonces</li>
             {% endfor %}
         </ul>
