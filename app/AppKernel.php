@@ -3,6 +3,7 @@
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use OC\PlatformBundle\OCPlatformBundle;
+use TO\BasicsBundle\TOBasicsBundle;
 
 class AppKernel extends Kernel
 {
@@ -16,8 +17,9 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            // Personal bundles
             new OCPlatformBundle(),
-            new TO\BasicsBundle\TOBasicsBundle(),
+            new TOBasicsBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

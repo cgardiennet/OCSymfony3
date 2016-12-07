@@ -1,3 +1,3 @@
-to_basics_homepage:
-    path:     /
-    defaults: { _controller: TOBasicsBundle:Default:index }
+#to_basics_homepage:
+#    path:     /
+#    defaults: { _controller: TOBasicsBundle:Default:index }

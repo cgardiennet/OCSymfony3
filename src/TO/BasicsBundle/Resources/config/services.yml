@@ -1,4 +1,13 @@
+parameters:
+    templateDefaultExtension: html.twig
+
 services:
 #    to_basics.example:
 #        class: TO\BasicsBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+    to_basics.autotemplate:
+        class: TO\BasicsBundle\Services\AutoTemplate\TOBasicsAutoTemplateService
+        arguments:
+            - "@request_stack"
+            - "%templateDefaultExtension%"
