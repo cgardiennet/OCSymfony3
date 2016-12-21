@@ -1,9 +1,10 @@
 <?php
 
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use OC\CoreBundle\OCCoreBundle;
 use OC\PlatformBundle\OCPlatformBundle;
+use Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 use TO\BasicsBundle\TOBasicsBundle;
 
 class AppKernel extends Kernel
@@ -18,6 +19,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new StofDoctrineExtensionsBundle(),
             // Personal bundles
             new OCCoreBundle(),
             new OCPlatformBundle(),
