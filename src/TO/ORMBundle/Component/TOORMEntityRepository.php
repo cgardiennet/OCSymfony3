@@ -80,9 +80,6 @@ class TOORMEntityRepository extends EntityRepository
         $result = $this
             ->getQueryBuilder()
             ->where(sprintf('%s.id = :id', $this->defaultAlias))
-//             ->andWhere(
-//                 sprintf('%s.id = :id', $this->defaultAlias)
-//             )
             ->setParameter('id', $id)
             ->getQuery()
             ->getSingleResult($this->hydratationMode)
