@@ -1,3 +1,9 @@
-#flashbag:empty {
+div:empty {
     display:none;
+}
+
+ label.required:after {
+    color: #e32;
+    content: ' *';
+    display:inline;
 }

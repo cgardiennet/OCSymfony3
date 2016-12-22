@@ -7,10 +7,6 @@
 {% block body %}
     <h1>Page d'accueil de notre site</h1>
 
-    <div id="flashbag" class="alert alert-info">{% for message in app.session.flashbag.get('info') %}
-        <p>Message flash : {{ message }}</p>
-    {% endfor %}</div>
-
     {{ include("OCPlatformBundle:Advert:list.html.twig") }}
 
 {% endblock %}
