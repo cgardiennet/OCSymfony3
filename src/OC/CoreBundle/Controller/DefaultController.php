@@ -13,18 +13,15 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $listAdverts = $em
             ->getRepository('OCPlatformBundle:Advert')
-            ->findBy(
-                array(),
-                array('id' => 'DESC'),
-                3,
-                0
-            )
+            ->getAdverts(1, 3)
         ;
 
         $response = $this->render(
             $this->get('to_basics.autotemplate')->getTemplateFileName(),
             [
-                'listAdverts' => $listAdverts
+                'listAdverts' => $listAdverts,
+                'page' => 1,
+                'nbPages' => 1
             ]
         );
 

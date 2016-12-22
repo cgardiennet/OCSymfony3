@@ -25,22 +25,23 @@ class AdvertController extends Controller
             ));
         }
 
+        $nbPerPage = $this->container->getParameter('nb_per_page');
+
         $em = $this->getDoctrine()->getManager();
 
         $listAdverts = $em
             ->getRepository('OCPlatformBundle:Advert')
-            ->findBy(
-                array(),
-                array('id' => 'DESC'),
-                null,
-                0
-            )
+            ->getAdverts($page, $nbPerPage)
         ;
+
+        $nbPages = ceil(count($listAdverts) / $nbPerPage);
 
         $response = $this->render(
             $this->get('to_basics.autotemplate')->getTemplateFileName(),
             [
-                'listAdverts' => $listAdverts
+                'listAdverts' => $listAdverts,
+                'page' => $page,
+                'nbPages' => $nbPages
             ]
         );
 

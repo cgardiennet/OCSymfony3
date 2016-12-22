@@ -1,3 +1,6 @@
+parameters:
+    nb_per_page: 5
+
 services:
 #    oc_platform.example:
 #        class: OC\PlatformBundle\Example

@@ -2,6 +2,7 @@
 
 namespace OC\PlatformBundle\Repository;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use TO\ORMBundle\Component\TOORMEntityRepository;
 
 /**
@@ -14,6 +15,27 @@ class AdvertRepository extends TOORMEntityRepository
 {
 
     protected $defaultAlias = 'a';
+
+    public function getAdverts($page, $nbPerPage)
+    {
+
+        $query = $this
+            ->loadApplicationsFromAdvert()
+            ->loadCategoriesFromAdvert()
+            ->getQueryBuilder()
+            ->orderBy(
+                sprintf('%s.date', $this->defaultAlias),
+                'DESC'
+            )
+            ->getQuery()
+        ;
+
+        $query
+            ->setFirstResult(($page - 1) * $nbPerPage)
+            ->setMaxResults($nbPerPage);
+
+        return new Paginator($query, true);
+    }
 
     public function loadApplicationsFromAdvert()
     {
