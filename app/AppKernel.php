@@ -6,6 +6,7 @@ use Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use TO\BasicsBundle\TOBasicsBundle;
+use TO\ORMBundle\TOORMBundle;
 
 class AppKernel extends Kernel
 {
@@ -24,6 +25,7 @@ class AppKernel extends Kernel
             new OCCoreBundle(),
             new OCPlatformBundle(),
             new TOBasicsBundle(),
+            new TOORMBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

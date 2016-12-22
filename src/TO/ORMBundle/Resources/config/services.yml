@@ -1,0 +1,4 @@
+services:
+#    toorm.example:
+#        class: TO\ORMBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
