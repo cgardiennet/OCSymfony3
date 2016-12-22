@@ -27,7 +27,6 @@ class AdvertController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//         $repository = new EntityRepository($em, $class);
         $listAdverts = $em
             ->getRepository('OCPlatformBundle:Advert')
             ->findBy(
@@ -99,8 +98,7 @@ class AdvertController extends Controller
 
         // Récupération de la session
         $session = $request->getSession();
-//         $userId = $session->get('user_id');
-        $session->set('user_id', 91);
+        $userId = $session->get('user_id');
 
         $url = $this->generateUrl(
             'oc_platform_view',
@@ -124,7 +122,7 @@ class AdvertController extends Controller
                 'slug' => $slug,
                 'year' => $year,
                 'format' => $_format,
-//                 'sessionUserId' => $userId
+                'sessionUserId' => $userId
             ]
         );
 
@@ -140,53 +138,9 @@ class AdvertController extends Controller
             ->createForm(AdvertType::class, $advert)
             ->handleRequest($request);
 
-//         $image
-//             ->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg')
-//             ->setAlt('Job de reve')
-//         ;
-
-//         $advert
-//             ->setTitle('Recherche développpeur Symfony2')
-//             ->setAuthor('Alexandre')
-//             ->setContent('Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…')
-//             ->setImage($image)
-//         ;
-
-//         // Création d'une première candidature
-//         $application1 = new Application();
-//         $application1
-//             ->setAuthor('Marine')
-//             ->setContent("J'ai toutes les qualités requises.")
-//             ->setAdvert($advert)
-//         ;
-
-//         // Création d'une deuxième candidature par exemple
-//         $application2 = new Application();
-//         $application2
-//             ->setAuthor('Pierre')
-//             ->setContent("Je suis très motivé.")
-//             ->setAdvert($advert)
-//         ;
-
-//         $em->persist($advert);
-//         $em->persist($application1);
-//         $em->persist($application2);
-
-//         $em->flush();
-
         if ($form->isSubmitted() && $form->isValid()) {
             $advert = $form->getData();
-
-            // Création d'une première candidature
-            $application1 = new Application();
-            $application1
-                ->setAuthor('Marine')
-                ->setContent("J'ai toutes les qualités requises.")
-                ->setAdvert($advert)
-            ;
-
             $em->persist($advert);
-            $em->persist($application1);
             $em->flush();
 
             $request->getSession()->getFlashBag()->add(
