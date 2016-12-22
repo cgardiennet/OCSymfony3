@@ -10,12 +10,15 @@ class DefaultController extends Controller
     public function indexAction()
     {
 
-        $listAdverts = $this
-            ->get('oc_platform.adverts')
-            ->getAdvertCollection()
-            ->getCollectionSlice(-3, 3)
-            ->sortCollection('desc')
-            ->displayCollection()
+        $em = $this->getDoctrine()->getManager();
+        $listAdverts = $em
+            ->getRepository('OCPlatformBundle:Advert')
+            ->findBy(
+                array(),
+                array('id' => 'DESC'),
+                3,
+                0
+            )
         ;
 
         $response = $this->render(
@@ -31,7 +34,7 @@ class DefaultController extends Controller
     public function contactAction(Request $request)
     {
         $request->getSession()->getFlashBag()->add(
-            'info',
+            'notice',
             "La page de contact n'est pas encore disponible, merci de revenir plus tard"
         );
 
