@@ -5,13 +5,54 @@
 {% endblock %}
 
 {% block ocplatform_body %}
-        <h2>{{ advert.title }}</h2>
-        <i>Par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}</i>
-        
-        <div class="well">
-            {{ advert.content }}
+        <div>
+            <div style="float:left; margin-right: 1em">
+            {% if advert.image is not null %}
+                <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}" height="60">
+            {% endif %}
+            </div>
+
+            <h2>{{ advert.title }}</h2>
+            <i>Par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}</i>
         </div>
-        
+
+        <div class="well">
+            {{ advert.content|nl2br }}
+        </div>
+        {% if not advert.categories.empty %}
+        <p>
+            Cette annonce est parue dans les catégories suivantes :
+            {% for category in advert.categories %}
+                {{ category.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        {% endif %}
+
+        {% if listAdvertSkills|length > 0 %}
+          <div>
+            Cette annonce requiert les compétences suivantes :
+            <ul>
+              {% for advertSkill in listAdvertSkills %}
+                <li>{{ advertSkill.skill.name }} : niveau {{ advertSkill.level }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        {% if not advert.applications.empty %}
+        <div>
+            <h4 style="text-decoration:underline">Applications</h4>
+            {% for application in advert.applications %}
+            <div class="well">
+                <i class="glyphicon glyphicon-comment"> Par {{ application.author }}, le {{ application.date|date('d/m/Y') }}</i>
+                <p>{{ application.content|nl2br }}</p>
+            </div>
+            {% else %}
+            <div>Pas (encore !) d'applications</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <p>
             <a href="{{ path('oc_platform_home') }}" class="btn btn-default">
                 <i class="glyphicon glyphicon-chevron-left"></i>

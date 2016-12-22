@@ -19,21 +19,23 @@ class OCPlatformAdvertsService
     {
         $this->advertCollection = $this->getListAdverts();
 
+//         $em = $this->getDoctrine()->getManager();
+
         return $this;
     }
 
-    public function getDefaultAdvert($id)
-    {
-        $advert = array(
-            'title'   => 'Recherche développpeur Symfony2',
-            'id'      => $id,
-            'author'  => 'Alexandre',
-            'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
-            'date'    => new DateTime()
-        );
+//     public function getDefaultAdvert($id)
+//     {
+//         $advert = array(
+//             'title'   => 'Recherche développpeur Symfony2',
+//             'id'      => $id,
+//             'author'  => 'Alexandre',
+//             'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
+//             'date'    => new DateTime()
+//         );
 
-        return $advert;
-    }
+//         return $advert;
+//     }
 
     public function sortCollection($order = 'asc')
     {

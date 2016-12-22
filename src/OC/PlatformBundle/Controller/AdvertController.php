@@ -2,7 +2,12 @@
 
 namespace OC\PlatformBundle\Controller;
 
+use OC\PlatformBundle\Entity\Advert;
+use OC\PlatformBundle\Entity\Application;
+use OC\PlatformBundle\Form\AdvertType;
+use OC\PlatformBundle\OCPlatformBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -20,10 +25,17 @@ class AdvertController extends Controller
             ));
         }
 
-        $listAdverts = $this
-            ->get('oc_platform.adverts')
-            ->getAdvertCollection()
-            ->displayCollection()
+        $em = $this->getDoctrine()->getManager();
+
+//         $repository = new EntityRepository($em, $class);
+        $listAdverts = $em
+            ->getRepository('OCPlatformBundle:Advert')
+            ->findBy(
+                array(),
+                array('id' => 'DESC'),
+                null,
+                0
+            )
         ;
 
         $response = $this->render(
@@ -38,12 +50,42 @@ class AdvertController extends Controller
 
     public function viewAction($id, Request $request)
     {
-        $advert = $this->get('oc_platform.adverts')->getDefaultAdvert($id);
+        $em = $this->getDoctrine()->getManager();
+
+        $advertRepository = $em->getRepository('OCPlatformBundle:Advert');
+
+        $advert = $advertRepository
+            ->loadApplicationsFromAdvert()
+            ->loadCategoriesFromAdvert()
+            ->findIdFromQueryBuilder($id)
+        ;
+
+        // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
+        // ou null si l'id $id  n'existe pas, d'où ce if :
+        if (null === $advert) {
+            throw new NotFoundHttpException(sprintf(
+                "L'annonce d'id %s n'existe pas.",
+                $id
+            ));
+        }
+
+        $advertSkillRepository =$em->getRepository('OCPlatformBundle:AdvertSkill');
+
+        $listAdvertSkills = $advertSkillRepository
+            ->loadAdvertSkillWithSkill()
+            ->findByFromQueryBuilder(
+                array(
+                    sprintf('%s.advert = :advert', $advertSkillRepository->getDefaultAlias()) => 'AND'
+                ),
+                array('advert' => $advert)
+            )
+        ;
 
         $response = $this->render(
             $this->get('to_basics.autotemplate')->getTemplateFileName(),
             [
                 'advert' => $advert,
+                'listAdvertSkills' => $listAdvertSkills
             ]
         );
 
@@ -91,16 +133,75 @@ class AdvertController extends Controller
 
     public function addAction(Request $request)
     {
-        if ($request->isMethod('POST')) {
+        $em = $this->getDoctrine()->getManager();
+        $advert = new Advert();
+
+        $form = $this
+            ->createForm(AdvertType::class, $advert)
+            ->handleRequest($request);
+
+//         $image
+//             ->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg')
+//             ->setAlt('Job de reve')
+//         ;
+
+//         $advert
+//             ->setTitle('Recherche développpeur Symfony2')
+//             ->setAuthor('Alexandre')
+//             ->setContent('Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…')
+//             ->setImage($image)
+//         ;
+
+//         // Création d'une première candidature
+//         $application1 = new Application();
+//         $application1
+//             ->setAuthor('Marine')
+//             ->setContent("J'ai toutes les qualités requises.")
+//             ->setAdvert($advert)
+//         ;
+
+//         // Création d'une deuxième candidature par exemple
+//         $application2 = new Application();
+//         $application2
+//             ->setAuthor('Pierre')
+//             ->setContent("Je suis très motivé.")
+//             ->setAdvert($advert)
+//         ;
+
+//         $em->persist($advert);
+//         $em->persist($application1);
+//         $em->persist($application2);
+
+//         $em->flush();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $advert = $form->getData();
+
+            // Création d'une première candidature
+            $application1 = new Application();
+            $application1
+                ->setAuthor('Marine')
+                ->setContent("J'ai toutes les qualités requises.")
+                ->setAdvert($advert)
+            ;
+
+            $em->persist($advert);
+            $em->persist($application1);
+            $em->flush();
+
             $request->getSession()->getFlashBag()->add(
                 'notice',
                 'Annonce bien enregistrée.'
             );
-            return $this->redirectToRoute('oc_platform_view', array('id' => 5));
+            return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
         }
 
         $response = $this->render(
-            $this->get('to_basics.autotemplate')->getTemplateFileName()
+            $this->get('to_basics.autotemplate')->getTemplateFileName(),
+            [
+                'advert' => $advert,
+                'form' => $form->createView()
+            ]
         );
 
         return $response;
@@ -108,7 +209,22 @@ class AdvertController extends Controller
 
     public function editAction($id, Request $request)
     {
-        if ($request->isMethod('POST')) {
+
+        $em = $this->getDoctrine()->getManager();
+        $advert = $em
+            ->getRepository('OCPlatformBundle:Advert')
+            ->find($id)
+        ;
+
+        $form = $this
+            ->createForm(AdvertType::class, $advert)
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $em->persist($data);
+            $em->flush();
+
             $request->getSession()->getFlashBag()->add(
                 'notice',
                 'Annonce bien modifiée.'
@@ -116,12 +232,20 @@ class AdvertController extends Controller
             return $this->redirectToRoute('oc_platform_view', array('id' => $id));
         }
 
-        $advert = $this->get('oc_platform.adverts')->getDefaultAdvert($id);
+        // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
+        // ou null si l'id $id  n'existe pas, d'où ce if :
+        if (null === $advert) {
+            throw new NotFoundHttpException(sprintf(
+                "L'annonce d'id %s n'existe pas.",
+                $id
+            ));
+        }
 
         $response = $this->render(
             $this->get('to_basics.autotemplate')->getTemplateFileName(),
             [
-                'advert' => $advert
+                'advert' => $advert,
+                'form' => $form->createView()
             ]
         );
 
@@ -143,6 +267,28 @@ class AdvertController extends Controller
         );
 
         return $response;
+    }
+
+    public function testAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $adverts = $em
+            ->getRepository('OCPlatformBundle:Advert')
+            ->findAll()
+        ;
+
+        foreach ($adverts as $advert) {
+            $advert->setTitle($advert->getTitle() . '!');
+            $em->persist($advert);
+        }
+        $em->flush();
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Tentative slugs.'
+        );
+
+        return $this->redirectToRoute('oc_platform_home');
     }
 
 }

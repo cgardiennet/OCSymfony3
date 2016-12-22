@@ -1,6 +1,45 @@
     <h3>Votre annonce</h3>
 
-    <form id="myForm" method="POST">
-        <label for="adverTitle">Advert title</label>
-        <input type="text" name="advertTitle" id="advertTitle" placeholder="Advert Title">
+    <form name="advert" method="post">
+        <div class="form-group" style="width:50%;padding:0px 15px">
+            <label for="advert_title" class="required">Title</label>
+            <input type="text" id="advert_title" name="advert[title]" required="required" class="form-control" value="{{ advert.title }}">
+            {{ form_errors(form.title) }}
+        </div>
+        <div class="form-group" style="width:50%;padding:0px 15px">
+            <label for="advert_author" class="required">Author</label>
+            <input type="text" id="advert_author" name="advert[author]" required="required" class="form-control" value="{{ advert.author }}">
+            {{ form_errors(form.author) }}
+        </div>
+        <div class="form-group" style="width:50%;padding:0px 15px">
+            <label for="advert_email" class="required">Email</label>
+            <input type="text" id="advert_email" name="advert[email]" required="required" class="form-control" value="{{ advert.email }}">
+            {{ form_errors(form.email) }}
+        </div>
+        <div class="form-group" style="width:100%;padding:0px 15px">
+            <label for="advert_content" class="required">Content</label>
+            <textarea id="advert_content" name="advert[content]" required="required" class="form-control" rows="10">{{ advert.content }}</textarea>
+            {{ form_errors(form.content) }}
+        </div>
+        <div class="form-group col-md-6">
+            <label for="imageUrl">Image</label>
+            <input type="url" name="imageUrl" id="imageUrl" placeholder="URL" value="{% if advert.image is not null %}{{ advert.image.url }}{% endif %}" class="form-control">
+            <input type="text" name="imageAlt" id="imageAlt" placeholder="Alternative text" value="{% if advert.image is not null %}{{ advert.image.alt }}{% endif %}" class="form-control">
+        </div>
+        <div class="form-group col-md-6">
+            {% if advert.image is not null %}
+                <label>Preview</label>
+                <br>
+                <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}" height="60"><br>
+                <br>
+            {% endif %}
+        </div>
+        <div class="col-md-12"> </div>
+        <div class="form-group col-md-6 text-center">
+            <button type="reset" id="advert_cancel" name="advert[cancel]" class="btn btn-cancel">Cancel</button>
+        </div>
+        <div class="form-group col-md-6 text-center">
+            <button type="submit" id="advert_save" name="advert[save]" class="btn btn-primary">Save</button>
+        </div>
+        <input type="hidden" id="advert__token" name="advert[_token]" value="{{ csrf_token('advert') }}">
     </form>

@@ -7,7 +7,7 @@ oc_platform_home:
         page: 1
     requirements:
         page: \d+
-    
+
 oc_platform_view:
     path: /advert/{id}
     defaults:
@@ -23,12 +23,12 @@ oc_platform_view_slug:
     requirements:
         year: \d{4}
         _format: html|xml
-    
+
 oc_platform_add:
     path: /add
     defaults:
         _controller: OCPlatformBundle:Advert:add
-        
+
 oc_platform_edit:
     path: /edit/{id}
     defaults:
@@ -42,3 +42,8 @@ oc_platform_delete:
         _controller: OCPlatformBundle:Advert:delete
     requirements:
         id: \d+
+
+oc_platform_test:
+    path: /test
+    defaults:
+        _controller: OCPlatformBundle:Advert:test
