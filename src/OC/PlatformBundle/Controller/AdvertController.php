@@ -246,4 +246,21 @@ class AdvertController extends Controller
         return $this->redirectToRoute('oc_platform_home');
     }
 
+    public function purgeAction($days, Request $request)
+    {
+        $purgeService = $this->get('oc_platform.purger.advert');
+        $result = $purgeService->purge($days);
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            sprintf(
+                '%s annonces de plus de %s jours sans candidatures supprimées',
+                $result,
+                $days
+            )
+        );
+
+        return $this->redirectToRoute('oc_platform_home');
+    }
+
 }

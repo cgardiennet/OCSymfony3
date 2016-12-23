@@ -29,6 +29,9 @@ class TOORMEntityRepository extends EntityRepository
      */
     protected $hydratationMode = Query::HYDRATE_OBJECT;
 
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     public function getQueryBuilder()
     {
         if (!isset($this->queryBuilder)) {
