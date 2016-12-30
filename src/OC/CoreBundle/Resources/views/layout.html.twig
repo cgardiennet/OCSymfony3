@@ -13,71 +13,69 @@
             <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
             <link rel="stylesheet" href="{{ absolute_url(asset('bundles/occore/css/body.css')) }}">
         {% endblock %}
+        {% block javascripts %}
+            {# Ajoutez ces lignes JavaScript si vous comptez vous servir des fonctionnalités du bootstrap Twitter #}
+            <script src="{{ asset('js/jquery-1.12.4.min.js') }}" defer></script>
+            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" defer></script>
+        {% endblock %}
     </head>
 
     <body>
-    <div class="container">
-        <div id="header" class="jumbotron">
-            <h1>Ma plateforme d'annonces</h1>
-                <p>
-                    Ce projet est propulsé par Symfony,
-                    et construit grâce au MOOC OpenClassrooms et SensioLabs.
-                </p>
-                <p>
-                    <a class="btn btn-primary btn-lg" href="https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2">
-                        Participer au MOOC »
-                    </a>
-                </p>
-        </div>
-
-        <div class="row">
-            <div id="menu" class="col-md-3">
-                <h3>Menu</h3>
-                <ul class="nav nav-pills nav-stacked">
-                    <li>
-                        <a href="{{ path('oc_core_home') }}">
-                            <i class="glyphicon glyphicon-home"></i>
-                            Accueil
+        <div class="container">
+            <div id="header" class="jumbotron">
+                <h1>Ma plateforme d'annonces</h1>
+                    <p>
+                        Ce projet est propulsé par Symfony,
+                        et construit grâce au MOOC OpenClassrooms et SensioLabs.
+                    </p>
+                    <p>
+                        <a class="btn btn-primary btn-lg" href="https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2">
+                            Participer au MOOC »
                         </a>
-                    </li>
-                    <li><a href="{{ path('oc_platform_home') }}">Liste des annonces</a></li>
-                    <li><a href="{{ path('oc_platform_add') }}">Ajouter une annonce</a></li>
-                    <li><a href="{{ path('oc_core_contact') }}">Contact</a></li>
-                </ul>
+                    </p>
+            </div>
 
-                <h4>Dernières annonces</h4>
-                {{ include(
-                    "OCPlatformBundle:Advert:menuList.html.twig",
-                    {
-                        'menuListAdverts' : oc_platform_adverts
-                            .getAdvertCollection()
-                            .getCollectionSlice(-3,3)
-                            .sortCollection('desc')
-                            .displayCollection()
-                    }
-                ) }}
+            <div class="row">
+                <div id="menu" class="col-md-3">
+                    <h3>Menu</h3>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li>
+                            <a href="{{ path('oc_core_home') }}">
+                                <i class="glyphicon glyphicon-home"></i>
+                                Accueil
+                            </a>
+                        </li>
+                        <li><a href="{{ path('oc_platform_home') }}">Liste des annonces</a></li>
+                        <li><a href="{{ path('oc_platform_add') }}">Ajouter une annonce</a></li>
+                        <li><a href="{{ path('oc_core_contact') }}">Contact</a></li>
+                    </ul>
+
+                    <h4>Dernières annonces</h4>
+                    {{ include(
+                        "OCPlatformBundle:Advert:menuList.html.twig",
+                        {
+                            'menuListAdverts' : oc_platform_adverts
+                                .getAdvertCollection()
+                                .getCollectionSlice(-3,3)
+                                .sortCollection('desc')
+                                .displayCollection()
+                        }
+                    ) }}
+                </div>
+                <div id="content" class="col-md-9">
+                    <div id="flashbag" class="alert alert-info">{% for message in app.session.flashbag.get('notice') %}
+                        <p>Message flash : {{ message }}</p>
+                    {% endfor %}</div>
+                    {% block body %}
+                    {% endblock %}
+                </div>
             </div>
-            <div id="content" class="col-md-9">
-                <div id="flashbag" class="alert alert-info">{% for message in app.session.flashbag.get('notice') %}
-                    <p>Message flash : {{ message }}</p>
-                {% endfor %}</div>
-                {% block body %}
-                {% endblock %}
-            </div>
+
+            <hr>
+
+            <footer>
+                <p>The sky's the limit © {{ 'now'|date('Y') }} and beyond.</p>
+            </footer>
         </div>
-
-        <hr>
-
-        <footer>
-            <p>The sky's the limit © {{ 'now'|date('Y') }} and beyond.</p>
-        </footer>
-    </div>
-
-    {% block javascripts %}
-        {# Ajoutez ces lignes JavaScript si vous comptez vous servir des fonctionnalités du bootstrap Twitter #}
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    {% endblock %}
-
     </body>
 </html>
