@@ -27,6 +27,10 @@ class AdvertRepository extends TOORMEntityRepository
                 sprintf('%s.date', $this->defaultAlias),
                 'DESC'
             )
+            ->orderBy(
+                sprintf('%s.id', $this->defaultAlias),
+                'DESC'
+            )
             ->getQuery()
         ;
 

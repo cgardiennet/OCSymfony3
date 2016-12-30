@@ -8,7 +8,7 @@
         <div>
             <div style="float:left; margin-right: 1em">
             {% if advert.image is not null %}
-                <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}" height="60">
+                <img src="{% if advert.image.extension is not null %}{{ asset(advert.image.webPath) }}{% else %}{{ advert.image.url }}{% endif %}" alt="{{ advert.image.alt }}" height="60">
             {% endif %}
             </div>
 

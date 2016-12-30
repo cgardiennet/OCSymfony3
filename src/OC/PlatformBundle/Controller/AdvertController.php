@@ -3,7 +3,7 @@
 namespace OC\PlatformBundle\Controller;
 
 use OC\PlatformBundle\Entity\Advert;
-use OC\PlatformBundle\Entity\Application;
+use OC\PlatformBundle\Form\AdvertEditType;
 use OC\PlatformBundle\Form\AdvertType;
 use OC\PlatformBundle\OCPlatformBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -140,7 +140,6 @@ class AdvertController extends Controller
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $advert = $form->getData();
             $em->persist($advert);
             $em->flush();
 
@@ -172,12 +171,11 @@ class AdvertController extends Controller
         ;
 
         $form = $this
-            ->createForm(AdvertType::class, $advert)
+            ->createForm(AdvertEditType::class, $advert)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $em->persist($data);
+            $em->persist($advert);
             $em->flush();
 
             $request->getSession()->getFlashBag()->add(
@@ -209,7 +207,30 @@ class AdvertController extends Controller
 
     public function deleteAction($id, Request $request)
     {
-        if ($request->isMethod('POST')) {
+        $em = $this->getDoctrine()->getManager();
+        $advert = $em
+            ->getRepository('OCPlatformBundle:Advert')
+            ->find($id)
+        ;
+
+        if (null === $advert) {
+            throw new NotFoundHttpException(sprintf(
+                "L'annonce d'id %s n'existe pas.",
+                $id
+            ));
+        }
+
+        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+        // Cela permet de protéger la suppression d'annonce contre cette faille
+        $form = $this
+            ->get('form.factory')
+            ->create()
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->remove($advert);
+            $em->flush();
+
             $request->getSession()->getFlashBag()->add(
                 'notice',
                 'Annonce bien supprimée.'
@@ -218,7 +239,11 @@ class AdvertController extends Controller
         }
 
         $response = $this->render(
-            $this->get('to_basics.autotemplate')->getTemplateFileName()
+            $this->get('to_basics.autotemplate')->getTemplateFileName(),
+            array(
+              'advert' => $advert,
+              'form'   => $form->createView()
+            )
         );
 
         return $response;
