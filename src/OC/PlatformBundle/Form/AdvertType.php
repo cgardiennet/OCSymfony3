@@ -2,8 +2,11 @@
 
 namespace OC\PlatformBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -11,7 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use OC\PlatformBundle\Entity\Category;
 
 class AdvertType extends AbstractType
 {
@@ -20,41 +22,27 @@ class AdvertType extends AbstractType
     {
 
         $builder
+            ->add('date', DateType::class, array('html5' => false, 'format' => 'ddMMMMyyyy', 'label' => 'Date'))
+            ->add('title', TextType::class, array('label' => 'Title'))
+            ->add('author', TextType::class, array('label' => 'Author'))
+            ->add('email', EmailType::class, array('label' => 'Email'))
+            ->add('content', TextareaType::class, array('label' => 'Content'))
+            ->add('published', CheckboxType::class, array('label' => 'Published'))
+            ->add('image', ImageType::class, array('required' => false, 'label' => 'Image'))
             ->add(
-                'title',
-                TextType::class,
-                ['label' => 'Title', 'attr' => ['class' => 'form-control']]
+                'categories',
+                EntityType::class,
+                array(
+                    'class' => 'OCPlatformBundle:Category',
+                    'choice_label' => 'name',
+                    'multiple' => true,
+                    'expanded' => true,
+                    'required' => false,
+                    'label' => 'Categories'
+                )
             )
-            ->add(
-                'author',
-                TextType::class,
-                ['label' => 'Author', 'attr' => ['class' => 'form-control']]
-            )
-            ->add(
-                'email',
-                TextType::class,
-                ['label' => 'Email', 'attr' => ['class' => 'form-control']]
-            )
-            ->add(
-                'content',
-                TextareaType::class,
-                ['label' => 'Content', 'attr' => ['class' => 'form-control', 'rows' => 10]]
-            )
-//             ->add(
-//                 'categories',
-//                 ChoiceType::class,
-//                 ['label' => 'Categories', 'attr' => ['choices' => array('Developpement', 'Mobile', 'Systeme', 'Webdesigner'), 'class' => 'form-control']]
-//             )
-            ->add(
-                'save',
-                SubmitType::class,
-                ['label' => 'Save', 'attr' => ['class' => 'btn btn-primary']]
-            )
-            ->add(
-                'cancel',
-                ResetType::class,
-                ['label' => 'Cancel', 'attr' => ['class' => 'btn btn-cancel']]
-            )
+            ->add('save', SubmitType::class, array('label' => 'Save'))
+            ->add('cancel', ResetType::class, array('label' => 'Reset form'))
         ;
 
     }
